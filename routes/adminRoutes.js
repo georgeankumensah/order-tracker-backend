@@ -14,13 +14,34 @@ function isAdmin(req, res, next) {
   res.status(403).json({ error: 'Access denied' });
 }
 
+// Middleware to check if the user is authenticated
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ error: 'Authentication required' });
+}
+
+
 // Admin registration route (for initial setup)
-router.post('/register', async (req, res) => {
+// only an admin can add an a new admin
+// Route to register an admin
+router.post('/register', isAuthenticated, async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = new User({ username, isAdmin: true }); // Set isAdmin to true for admin users
-    await User.register(user, password);
-    res.status(201).json(user);
+    const { username, password, isAdmin } = req.body;
+
+    // Check if the requesting user is a super admin
+    if (!req.user || !req.user.isSuperAdmin) {
+      return res.status(403).json({ error: 'Super admin access required' });
+    }
+
+    // Create a new admin user
+    const user = new User({ username, password, isAdmin });
+
+    // registration logic
+    await user.save();
+    return res.status(201).json(user)
+
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -32,17 +53,62 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 });
 
 // delete an admin
-router.delete('/remove', async (req, res) => {
-    try {
-            const user = await User.findOneAndDelete({username: req.params.username});
-            if (!user) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            res.json(user);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    });
+// Route to delete an admin
+router.delete('/admins/:id', isAuthenticated, async (req, res) => {
+  try {
+    const adminId = req.params.id;
+
+    // Check if the requesting user is a super admin
+    if (!req.user || !req.user.isSuperAdmin) {
+      return res.status(403).json({ error: 'Super admin access required' });
+    }
+
+    // Find and delete the admin user by ID
+    // ... (deletion logic)
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+    // get all admins
+    router.get('/admins',isAdmin, async (req, res) => {
+
+      try {
+          const users = await User.find({isAdmin:true});
+          res.json(users);
+      } catch (error) {
+          res.status(500).json({ error: error.message });
+      }
+  });
+
+// Route to update an admin user by ID
+router.put('/admins/:id', isAuthenticated, async (req, res) => {
+  try {
+    const adminId = req.params.id;
+    const { username, password, isAdmin } = req.body;
+
+    // Check if the requesting user is a super admin
+    if (!req.user || !req.user.isSuperAdmin) {
+      return res.status(403).json({ error: 'Super admin access required' });
+    }
+
+    // Find and update the admin user by ID
+    const adminUser = await User.findById(adminId);
+    if (!adminUser) {
+      return res.status(404).json({ error: 'Admin user not found' });
+    }
+
+    // Update the admin user's details
+    adminUser.username = username;
+    adminUser.password = password;
+    adminUser.isAdmin = isAdmin;
+
+    await adminUser.save();
+    res.json(adminUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 // Admin actions (CRUD operations for orders)
@@ -56,6 +122,20 @@ router.post('/orders', isAdmin, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// delete all orders
+router.delete('/orders',isAdmin,async (req,res)=>{
+  try {
+    await Order.deleteMany({});
+    res.status(200).json({message:"All orders deleted"})
+  } catch (error) {
+    res.send(400).json({error:error.message})
+    
+  }
+})
+
+
+
 
 
 module.exports = router;

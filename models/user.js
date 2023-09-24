@@ -4,7 +4,8 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
-  isAdmin: Boolean,
+  isAdmin: Boolean,          // Indicates if the user is a regular admin
+  isSuperAdmin: Boolean,     // Indicates if the user is a super admin
 });
 
 userSchema.plugin(passportLocalMongoose);
