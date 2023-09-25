@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
 const flash = require("connect-flash");
 const dotenv = require("dotenv");
+const cors = require("cors")
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,6 +32,7 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(cors())
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

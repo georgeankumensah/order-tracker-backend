@@ -7,7 +7,7 @@ const warehouseSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-    shareableID: String, // Unique identifier for sharing
+  shareableID: String, // Unique identifier for sharing
   name: String,
   id: String,
   details: String,
@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
   status: String,
   currentWarehouse: String,
   warehouses: [warehouseSchema],
-  currentLocation: {
+  currentLocation: { 
     warehouseName: String, // Represents the current warehouse's name
     arrivalDate: Date,
     departureDate: Date,
