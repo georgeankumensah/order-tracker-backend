@@ -66,7 +66,6 @@ router.post('/', isAdmin, async (req, res) => {
         qty,
         destination,
         status,
-        warehouses,
         otherInformation,
       } = req.body;
   
@@ -82,7 +81,6 @@ router.post('/', isAdmin, async (req, res) => {
         qty,
         destination,
         status,
-        warehouses,
         otherInformation,
       });
   
@@ -129,7 +127,6 @@ router.put('/:id', isAdmin, async (req, res) => {
         qty,
         destination,
         status,
-        warehouses,
         currentLocation, // Updated field name
         otherInformation,
       } = req.body;
@@ -147,7 +144,6 @@ router.put('/:id', isAdmin, async (req, res) => {
       order.qty = qty;
       order.destination = destination;
       order.status = status;
-      order.warehouses = warehouses;
       order.currentLocation = currentLocation; // Updated field name
       order.otherInformation = otherInformation;
   

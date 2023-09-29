@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const warehouseSchema = new mongoose.Schema({
-  warehouseName: String,
+const statusSchema = new mongoose.Schema({
+  statusTitle: String,
   arrivalDate: Date,
   departureDate: Date,
 });
@@ -17,9 +17,8 @@ const orderSchema = new mongoose.Schema({
     to: String,
     from: String,
   },
-  status: String,
+  status: [statusSchema],
   currentWarehouse: String,
-  warehouses: [warehouseSchema],
   currentLocation: { 
     warehouseName: String, // Represents the current warehouse's name
     arrivalDate: Date,
