@@ -19,15 +19,17 @@ const orderSchema = new mongoose.Schema({
   },
   status: [statusSchema],
   currentWarehouse: String,
+  expectedArrivalTime: Date,
   currentLocation: { 
     warehouseName: String, // Represents the current warehouse's name
     arrivalDate: Date,
     departureDate: Date,
   },
+  
   otherInformation: {
     // Add other fields as needed
   },
-});
+}, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
 
