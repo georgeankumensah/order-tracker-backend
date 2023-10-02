@@ -12,7 +12,6 @@ const orderSchema = new mongoose.Schema({
   id: String,
   details: String,
   image: String,
-  qty: Number,
   destination: {
     to: String,
     from: String,
@@ -25,10 +24,10 @@ const orderSchema = new mongoose.Schema({
     arrivalDate: Date,
     departureDate: Date,
   },
-  
   otherInformation: {
     // Add other fields as needed
   },
+  qty: Number,
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
