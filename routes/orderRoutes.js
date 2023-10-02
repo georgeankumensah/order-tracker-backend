@@ -1,19 +1,21 @@
 // routes/orderRoutes.js
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const shortid = require('shortid');
-const Order = require('../models/order');
+const shortid = require("shortid");
+const Order = require("../models/order");
 
 // use $ and @ instead of - and _
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
+shortid.characters(
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@"
+);
 
 // Middleware to check if the user is an admin
 function isAdmin(req, res, next) {
   if (req.isAuthenticated() && req.user.isAdmin) {
     return next();
   }
-  res.status(403).json({ error: 'Admin access required' });
+  res.status(403).json({ error: "Admin access required" });
 }
 
 // Middleware to check if the user is authenticated
@@ -21,17 +23,17 @@ function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.status(401).json({ error: 'Authentication required' });
+  res.status(401).json({ error: "Authentication required" });
 }
 
 // Route to get an order by its shareable ID (accessible to unauthenticated users)
-router.get('/shareable/:shareableID', async (req, res) => {
+router.get("/shareable/:shareableID", async (req, res) => {
   try {
     const shareableID = req.params.shareableID;
     const order = await Order.findOne({ shareableID });
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(order);
@@ -44,12 +46,10 @@ router.get('/shareable/:shareableID', async (req, res) => {
 // ===============================================================
 
 // Route to create a new order
-router.post('/', isAdmin, async (req, res) => {
+router.post("/", isAdmin, async (req, res) => {
   try {
     const {
-      shareableID,
       name,
-      id,
       details,
       image,
       qty,
@@ -61,11 +61,11 @@ router.post('/', isAdmin, async (req, res) => {
       otherInformation,
     } = req.body;
 
+    const shareableID = shortid.generate();
     // Create a new order
     const order = new Order({
       shareableID,
       name,
-      id,
       details,
       image,
       qty,
@@ -85,7 +85,7 @@ router.post('/', isAdmin, async (req, res) => {
 });
 
 // Get all orders
-router.get('/', isAdmin, async (req, res) => {
+router.get("/", isAdmin, async (req, res) => {
   try {
     const orders = await Order.find();
     res.json(orders);
@@ -95,11 +95,11 @@ router.get('/', isAdmin, async (req, res) => {
 });
 
 // Get order by ID
-router.get('/:id', isAdmin, async (req, res) => {
+router.get("/:id", isAdmin, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
     res.json(order);
   } catch (error) {
@@ -108,16 +108,18 @@ router.get('/:id', isAdmin, async (req, res) => {
 });
 
 // Update order by ID
-router.put('/:id', isAdmin, async (req, res) => {
+router.put("/:id", isAdmin, async (req, res) => {
   try {
     const orderId = req.params.id;
     const updatedOrder = req.body;
 
     // Find the order by ID and update it
-    const order = await Order.findByIdAndUpdate(orderId, updatedOrder, { new: true });
+    const order = await Order.findByIdAndUpdate(orderId, updatedOrder, {
+      new: true,
+    });
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(order);
@@ -127,13 +129,13 @@ router.put('/:id', isAdmin, async (req, res) => {
 });
 
 // Delete order by ID
-router.delete('/:id', isAdmin, async (req, res) => {
+router.delete("/:id", isAdmin, async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
-    res.json({ message: 'Order deleted successfully' });
+    res.json({ message: "Order deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
