@@ -30,6 +30,7 @@ app.use(
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
+    
   })
 );
 app.use(cors())
