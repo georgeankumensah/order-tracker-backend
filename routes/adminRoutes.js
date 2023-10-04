@@ -5,6 +5,7 @@ const router = express.Router();
 const passport = require('passport');
 const Order = require('../models/order');
 const User = require('../models/user');
+const userMiddleware = require("../middlewares/user.middleware") 
 
 // Middleware to check if the user is an admin
 function isAdmin(req, res, next) {
@@ -22,6 +23,15 @@ function isAuthenticated(req, res, next) {
   res.status(401).json({ error: 'Authentication required' });
 }
 
+
+// fetch user
+router.get("/user",userMiddleware, async (req,res)=>{
+  try {
+    res.status(200).json(req.session.user)
+  } catch (error) {
+    return res.status(403).json({error : "user not found"});
+  }
+})
 
 // Admin registration route (for initial setup)
 // only an admin can add an a new admin
@@ -49,6 +59,7 @@ router.post('/register', isAuthenticated, async (req, res) => {
 
 // Admin login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
+  req.session.user = req.user;
   res.json(req.user);
 });
 

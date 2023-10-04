@@ -4,19 +4,14 @@ const express = require("express");
 const router = express.Router();
 const shortid = require("shortid");
 const Order = require("../models/order");
+const isAdmin = require("../middlewares/admin.middleware")
+const user = require("../middlewares/user.middleware")
 
 // use $ and @ instead of - and _
 shortid.characters(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@"
 );
 
-// Middleware to check if the user is an admin
-function isAdmin(req, res, next) {
-  if (req.isAuthenticated() && req.user.isAdmin) {
-    return next();
-  }
-  res.status(403).json({ error: "Admin access required" });
-}
 
 // Middleware to check if the user is authenticated
 function isAuthenticated(req, res, next) {
