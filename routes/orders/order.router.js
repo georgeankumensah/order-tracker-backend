@@ -8,7 +8,7 @@ const orderRouter = express.Router();
 orderRouter.get("/", isAdmin, getAllOrders);
 orderRouter.post("/", isAdmin, postAnOrder);
 orderRouter.get("/:id", isAdmin, getAnOrder);
-orderRouter.get("/:shareableID", getOrderByShareable);
+orderRouter.get("/shareable/:shareableID", getOrderByShareable);
 orderRouter.put("/:id", isAdmin, updateAnOrder);
 orderRouter.delete("/:id", isAdmin, deleteAnOrder);
 orderRouter.delete("/all", isAdmin, deleteAllOrders);

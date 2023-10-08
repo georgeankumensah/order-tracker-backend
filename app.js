@@ -1,12 +1,14 @@
 const express = require("express");
 const morgan = require("morgan");
 const session = require("express-session");
+const cors = require("cors");
 
 const error = require("./middlewares/error.middleware");
 
 const appRouter = require("./routes");
 
 const app = express();
+// app.use(cors());
 app.use(express.json());
 
 let initialObj = {

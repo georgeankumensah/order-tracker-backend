@@ -3,13 +3,14 @@ const userRouter = express.Router();
 const user = require("../../middlewares/user.middleware");
 const { isSuperAdmin } = require("../../middlewares/admin.middleware");
 
-const { login, getUser, deleteAnAdmin, getAllAdmins, register, updateAnAdmin } = require("./user.controller");
+const { login,logout, getUser, deleteAnAdmin, getAllAdmins, register, updateAnAdmin } = require("./user.controller");
 
-userRouter.post("/register", register);
+userRouter.post("/register",isSuperAdmin, register);
 userRouter.post("/login", login);
+userRouter.post("/logout", logout);
 userRouter.get("/", user, getUser);
-userRouter.put("/admin/:id", isSuperAdmin, updateAnAdmin);
+userRouter.put("/admin/:id",isSuperAdmin,  updateAnAdmin);
 userRouter.delete("/admin/:id", isSuperAdmin, deleteAnAdmin);
-userRouter.get("/admins", isSuperAdmin, getAllAdmins);
+userRouter.get("/admins",  getAllAdmins);
 
 module.exports = userRouter;
