@@ -50,5 +50,7 @@ app.use('/admin', adminRoutes); // Use /admin prefix for admin routes
 // Add admin route handlers here (e.g., for user registration, login, and admin actions)
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`)
+
+  ;
 });
