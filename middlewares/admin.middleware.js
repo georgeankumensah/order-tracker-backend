@@ -10,7 +10,6 @@ function isAdmin(req, res, next) {
 function isSuperAdmin(req, res, next) {
 	if (!req.session.user || !req.session.user.isSuperAdmin) {
 		res.status(403);
-
 		throw new Error("Super admin access required");
 	}
 	next();

@@ -13,7 +13,7 @@ const getUser = asyncHandler(async (req, res) => {
 // // only a super admin can add an a new admin
 // // Route to register an admin
 const register = asyncHandler(async (req, res) => {
-  const { username, password, isAdmin,isSuperAdmin } = req.body;
+  const { username, password, isAdmin, isSuperAdmin } = req.body;
 
   if (!username || !password || typeof password !== "boolean") {
     res.status(403);
@@ -22,19 +22,19 @@ const register = asyncHandler(async (req, res) => {
 
   // Check if username exists
   const exists = await User.findOne({ username: username });
-if (exists) {
-	res.status(403);
-	throw new Error("A user with this username already exists");
-}
+  if (exists) {
+    res.status(403);
+    throw new Error("A user with this username already exists");
+  }
 
-// Create a new admin user
-const user = await User.create({ username, password, isAdmin, isSuperAdmin });
+  // Create a new admin user
+  const user = await User.create({ username, password, isAdmin, isSuperAdmin });
 
-// Save the user to the database
-await user.save();
+  // Save the user to the database
+  await user.save();
 
   // Return the user
-    return res.status(200).json(user);
+  return res.status(200).json(user);
 });
 
 // // Admin login route

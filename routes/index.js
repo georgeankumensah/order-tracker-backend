@@ -4,7 +4,7 @@ const orderRouter = require("./orders/order.router");
 
 const appRouter = express.Router();
 appRouter.get("/", (req, res) => {
-	res.json({ success: true });
+  res.json({ success: true });
 });
 
 appRouter.use("/user", userRouter);
